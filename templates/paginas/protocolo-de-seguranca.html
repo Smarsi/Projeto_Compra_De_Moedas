@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+	<link rel="stylesheet" href="{% static '_css/protocolo-de-seguranca.css' %}"/>
+	
+	<div>
+		<header>
+			<img id="banner" src="{% static '_imagens/compra-segura.jpg' %}"/>
+			<img id="bannerptc" src="{% static '_imagens/banner-protocolo-seguranca.jpg' %}">
+		</header>
+	</div>
+<div>
+	<br>
+	<hr>
+	<br>	
+</div>
+<div>
+		<img id="ptc01" src="{% static '_imagens/ptc01.jpg' %}"/>
+		<br>
+		<hr>
+		<br>
+		<img id="ptc02" src="{% static '_imagens/ptc02.jpg' %}"/>
+		<br>
+		<hr>
+		<br>
+		<img id="ptc03" src="{% static '_imagens/ptc03.jpg' %}"/>
+		<br>
+		<hr>
+		<br>
+
+</div>
+
+<div>
+	<table id="tbptc01">
+		<tr>
+			<td id="par">
+				<h1>Patrimônio diversificado</h1>
+				<p>O patrimônio que se encontra em posse da corretora é dividido em vários servidores diferentes ao redor do mundo, e também em wallets e hard wallets.
+				</p>
+			</td>
+		</tr>
+		<tr>
+
+			<td id="par01">
+				<h1>Segurança anticentralização</h1>
+				<p>Como muitos sabem, alguns países uma vez ou outra decidem barrar a comercialização das criptomoedas e confiscar os bens digitais de empresas que possuem capital alocado nesses ativos.<br></p>
+				<p>Pensando nisso, a DOTTCOIN decidiu dividir seu patrimônio em servidores de vários países ao redor do mundo de modo que caso algum país decida confiscar nossos ativos, a perda será reduzida não impedindo nossa continuidade e garantindo que possamos continuar gerando liquidez e mantendo o patrimônio dos nossos clientes.</p>
+			</td>
+		</tr>
+		<tr>
+			<td id="par02">
+				<h1>Plataforma desvinculada</h1>
+				<p>Todo nosso sistema de negociações é totalmente desvinculado de nossos bancos de dados. Desse modo, nosso site não tem ligação nenhuma com nosso patrimônio<br></p>
+				<p>Em caso de um ataque hacker, nossos bancos de dados on-line precisam bater com nossos bancos de dados off-line, como nossos bancos de dados off-line não possuem conexão com internet, os valores não podem ser acessados por fora.</p>
+			</td>
+		</tr>
+	</table>
+</div>
+{% endblock %}

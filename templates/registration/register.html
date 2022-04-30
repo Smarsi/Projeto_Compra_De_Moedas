@@ -1,0 +1,14 @@
+{% load static %}
+{% block content %}
+
+    <link href="{% static '_css/registro.css' %}" rel="stylesheet">
+
+    <div class="container">
+        <h1>Crie sua conta</h1>
+        <form action="." method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input class="btn btn-primary" type="submit" value="Registrar">
+        </form>
+    </div>
+{% endblock %}

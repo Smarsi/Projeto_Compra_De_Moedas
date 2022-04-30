@@ -1,0 +1,13 @@
+body{
+    text-align: center;
+}
+
+input{
+    height: 20px;
+    text-decoration: none;
+    float: inherit;
+}
+
+span{
+    display: none;
+}

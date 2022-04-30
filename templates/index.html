@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  
+  <div>
+    <div>
+      	<img id="banner" src="{% static '_imagens/compra-segura.jpg' %}"/>
+      	<img id="criecripto" src="{% static '_imagens/flutuante-tenha-sua-cripto-menor.jpg' %}"/>
+      	<img id="comprecripto" src="{% static '_imagens/flutuante-compre-cripto.jpg' %}"/>
+        <img id="banner-protocolo"src="{% static '_imagens/flutuante-protocolo.jpg' %}">
+
+  	   <!-- TradingView Widget BEGIN -->
+      <article id="cotacao">
+        <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <div class="tradingview-widget-copyright"><a href="https://br.tradingview.com/markets/cryptocurrencies/prices-all/" rel="noopener" target="_blank"><span class="blue-text">Copyright &copy; 2022 - by Diego Fermiano</span></a></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js" async>
+            {
+            "width": "100%",
+            "height": "100%",
+            "defaultColumn": "overview",
+            "screener_type": "crypto_mkt",
+            "displayCurrency": "USD",
+            "colorTheme": "light",
+            "locale": "br"
+          }
+            </script>
+        </div>
+    </article>
+    <!-- TradingView Widget END -->
+    </div>
+
+    <div>
+      <a href="http://www.facebook.com"><button id="saiba-mais">SAIBA MAIS</button></a>
+      <a href="{% url 'client_index' %}"><button id="compre-agora">COMPRE AGORA</button></a>
+  </div>
+    
+    {% endblock %}
+
+    

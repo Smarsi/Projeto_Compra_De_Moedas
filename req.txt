@@ -1,0 +1,12 @@
+Criar:
+
+Nome da moeda 
+Valor
+8 casas decimais -> Quantidade 
+
+Cliente
+Nome cliente
+
+Pedido <moeda x quantidade(Valor R$)>
+-----
+status -> alterado manualmente

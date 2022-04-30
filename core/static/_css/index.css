@@ -1,0 +1,151 @@
+@charset "UTF-8";
+
+
+button:hover {
+	 background-color: #000000; 
+
+	transition: 0.5s;
+
+	opacity: 0.7;
+
+}
+
+img#obras {
+	display: block;
+	width: 500px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+button#home {
+	position: absolute;
+	top: 40px;
+	background-color: #1698d5;
+	border-radius: 5px;
+	border: none;
+	color: white;
+	width: 60px;
+	height: 30px;
+	font-size: 12pt;
+	left: 795px;
+}
+
+button#negociar {
+	position: absolute;
+	top: 40px;
+	background-color: #1698d5;
+	border-radius: 5px;
+	border: none;
+	color: white;
+	width: 130px;
+	height: 30px;
+	font-size: 12pt;
+	left: 870px; 
+}
+button#protocolos {
+	position: absolute;
+	top: 40px;
+	background-color: #1698d5;
+	border-radius: 5px;
+	border: none;
+	color: white;
+	width: 90px;
+	height: 30px;
+	font-size: 12pt;
+	left: 1015px;
+}
+
+button#contato {
+	position: absolute;
+	top: 40px;
+	background-color: #1698d5;
+	border-radius: 5px;
+	border: none;
+	color: white;
+	width: 75px;
+	height: 30px;
+	font-size: 12pt;
+	left: 1120px; 
+}
+button#sobre {
+	position: absolute;
+	top: 40px;
+	background-color: #1698d5;
+	border-radius: 5px;
+	border: none;
+	color: white;
+	width: 90px;
+	height: 30px;
+	font-size: 12pt;
+	left: 1210px;
+}
+
+article#cotacao {
+	position: absolute;
+	top: 110px;
+	left: 50px;
+	width: 575px;
+	height: 900px;
+}
+
+img#banner {
+	height: 100px;
+	padding-left: 40px;
+}
+
+img#criecripto {
+	position: absolute;
+	width: 300px;
+	left:1000px;
+	top: 110px;
+	border-radius: 10px;
+	box-shadow: 2px 2px 2px 2px grey;
+}
+
+img#comprecripto {
+	position: absolute;
+	width: 300px;
+	left: 675px;
+	top: 110px;
+	border-radius: 10px;
+	box-shadow: 2px 2px 2px 2px grey;
+}
+
+button#saiba-mais {
+	position: absolute;
+	font-size: 10pt;
+	color: white;
+	left: 1085px;
+	top: 380px;
+	width: 130px;
+	height: 35px;
+	background-color: #1698d5;
+	border: none;
+	border-radius: 20px;
+}
+
+button#compre-agora {
+	position: absolute;
+	font-size: 10pt;
+	color: white;
+	left: 760px;
+	top: 380px;
+	width: 130px;
+	height: 35px;
+	background-color: #1698d5;
+	border: none;
+	border-radius: 20px;
+}
+
+img#banner-protocolo {
+	position: absolute;
+	left: 675px;
+	top: 560px;
+	box-shadow: 2px 2px 2px 2px grey;
+	border-radius: 20px;
+}
+
+footer {
+	display: block;
+	margin-bottom: auto;
+}

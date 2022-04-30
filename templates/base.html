@@ -1,0 +1,25 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DOTTCOIN</title>
+	     <link rel="stylesheet" href="{%static '_css/index.css' %}"/>
+
+</head>
+<body>
+  <header>
+    <a href="{% url 'index' %}"><button id="home">Home</button></a>
+    <a href="{% url 'protocolos' %}"><button id="protocolos">Protocolos</button></a>
+    <a href="{% url 'sobre' %}"><button id="sobre">Sobre nós</button></a>
+    <a href="{% url 'contato' %}"><button id="contato">Contato</button></a>
+    <a href="{% url 'negociar' %}"><button id="negociar">Comprar/Vender</button></a>
+  </header>
+
+  {% block content %}
+    
+  {% endblock %}
+
+</div>
+</body>
+</html>

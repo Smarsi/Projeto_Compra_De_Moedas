@@ -1,0 +1,167 @@
+@charset "UTF-8";
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@500&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Titillium+Web&display=swap');
+</style>
+font-family: 'Kanit', sans-serif;
+font-family: 'Roboto', sans-serif;
+font-family: 'Titillium Web', sans-serif;
+
+{
+
+}
+
+button:hover {
+	 background-color: #000000; 
+
+	transition: 0.5s;
+
+	opacity: 0.7;
+
+}
+
+button#home {
+	position: absolute;
+	top: 40px;
+	background-color: #1698d5;
+	border-radius: 5px;
+	border: none;
+	color: white;
+	width: 60px;
+	height: 30px;
+	font-size: 12pt;
+	left: 795px;
+}
+
+button#negociar {
+	position: absolute;
+	top: 40px;
+	background-color: #1698d5;
+	border-radius: 5px;
+	border: none;
+	color: white;
+	width: 130px;
+	height: 30px;
+	font-size: 12pt;
+	left: 870px; 
+}
+button#protocolos {
+	position: absolute;
+	top: 40px;
+	background-color: #1698d5;
+	border-radius: 5px;
+	border: none;
+	color: white;
+	width: 90px;
+	height: 30px;
+	font-size: 12pt;
+	left: 1015px;
+}
+
+button#contato {
+	position: absolute;
+	top: 40px;
+	background-color: #1698d5;
+	border-radius: 5px;
+	border: none;
+	color: white;
+	width: 75px;
+	height: 30px;
+	font-size: 12pt;
+	left: 1120px; 
+}
+button#sobre {
+	position: absolute;
+	top: 40px;
+	background-color: #1698d5;
+	border-radius: 5px;
+	border: none;
+	color: white;
+	width: 90px;
+	height: 30px;
+	font-size: 12pt;
+	left: 1210px;
+}
+
+img#banner {
+	height: 100px;
+	padding-left: 20px;
+}
+
+img#bannerptc {
+	display: block;
+	width: 1300px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+hr {
+	width: 1300px;
+}
+
+table#tbptc01 {
+	display: block;
+	border-left: 200px;
+	width: 400px;
+	height: 400px;
+	box-shadow: 10px;
+}
+
+img#ptc01 {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 1200px;
+}
+
+img#ptc02 {
+	display: block;
+	width: 1200px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+img#ptc03 {
+	display: block;
+	width: 1200px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+h1 {
+	text-align: center;
+	color: black;
+	font-size: 23pt;
+}
+
+table {
+	font-size: 15pt;
+	font-family: kanit, sans-serif;
+}
+
+p {
+	text-indent: 40px;
+}
+
+td#par {
+	position: absolute;
+	top: 370px;
+	width: 700px;
+	padding-left: 100px;
+	font-family: kanit, sans-serif;
+}
+
+td#par01 {
+	position: absolute;
+	width: 800px;
+	top: 620px;
+	padding-left: 450px;
+}
+
+td#par02 {
+	position: absolute;
+	padding-left: 100px;
+	width: 800px;
+	top: 960px;
+}
+

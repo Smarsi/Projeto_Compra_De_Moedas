@@ -33,7 +33,8 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'core',
-
+    'usuarios',
+    
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -79,8 +80,12 @@ WSGI_APPLICATION = 'moedas.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'dottcoin',
+        'USER': 'root',
+        'PASSWORD': 'ric010203', #Banco local de desenvolvimento, não existe problema em commitar senhas
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
@@ -129,3 +134,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+AUTH_USER_MODEL = 'usuarios.CustomUsuario'
+
+LOGIN_REDIRECT_URL = 'index' #Ao logar vá para index
+LOGOUT_REDIRECT_URL = 'index' #Ao deslogar vá para index
