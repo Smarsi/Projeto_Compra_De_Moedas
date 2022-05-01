@@ -18,7 +18,19 @@ class Base(models.Model):
         abstract = True
 
 
-class Compra(Base):
+class Moeda(Base):
+
+    nome_moeda = models.CharField('Moeda', max_length=10)
+
+    class Meta:
+        verbose_name = 'Moeda'
+        verbose_name_plural = 'Moedas'
+
+    def __str__(self):
+        return self.nome_moeda
+
+
+class Solicitacao_Compra(Base):
 
     STATUS_CHOICES = (
         ('waiting', 'Esperando Pagamento'),
@@ -26,12 +38,77 @@ class Compra(Base):
         ('canceled', 'Cancelado'),
     )
 
+    nome_compra = models.CharField('Nome Compra', max_length=100, null=False, blank = False, default = f'{uuid.uuid4()}')
     cliente_compra = models.ForeignKey('usuarios.CustomUsuario', verbose_name='Usuario', on_delete=models.CASCADE)
-    moeda_compra = models.CharField('Moeda', max_length=50)
-    valor_moeda_compra = models.DecimalField(max_digits=16, decimal_places=8)
-    quantidade_moeda_compra = models.DecimalField(max_digits=16, decimal_places=8)
-    status_compra = models.CharField('Status', max_length=20, null = False, blank = False, default=STATUS_CHOICES[0], choices=STATUS_CHOICES)
+    moeda_compra = models.ForeignKey('core.Moeda', verbose_name='Moeda Escolhida', on_delete=models.SET_NULL, null=True)
+    quantidade_reais_compra = models.DecimalField('Quantidade (R$)', max_digits=16, decimal_places=2, default=0)
+    status_compra = models.CharField('Status', max_length=100, null = False, blank = False, default=STATUS_CHOICES[0], choices=STATUS_CHOICES)
 
     class Meta:
-        verbose_name = 'Compra'
-        verbose_name_plural = 'Compras'
+        verbose_name = 'Solicitação de Compra'
+        verbose_name_plural = 'Solicitações de Compras'
+
+    def __str__(self):
+        return str(self.pk)
+
+    def save(self, *args, **kwargs):
+
+        if self.pk:
+            
+            #Vamos pegar qual atributo foi alterado
+            cls = self.__class__
+            antigo = cls.objects.get(pk=self.pk) #Vamos pegar o status atual do item uma vez que ainda não salvamos a aleteração chamando o salvamento padrão
+            novo = self
+
+            campos_alterados = {}
+            for campo in cls._meta.get_fields():
+                field_name = campo.name
+                try:
+                    if getattr(antigo, field_name) != getattr(novo, field_name):
+                        campos_alterados[field_name] = True
+                    else:
+                        campos_alterados[field_name] = False
+
+                except Exception as ex: # Pega o erro "O campo não existe"
+                    pass
+
+            # Lógica de Salvamento para os campos alterados:
+
+            if campos_alterados['status_compra'] == True: #Ativando a moeda na conta do usuário após o pagamento.
+                if getattr(novo, field_name) == 'done' and getattr(antigo, field_name) == 'waiting':
+                    moeda_cliente = Moeda_Usuario(
+                        usuario = self.cliente_compra,
+                        moeda = self.moeda_compra,
+                        quantidade_reais_compra = self.quantidade_reais_compra,
+                        solicitacao = self, #essa solicitação
+                        )
+
+                    moeda_cliente.save()
+                    print(novo._meta.get_field('cliente_compra'))
+                    
+                else:
+                    pass
+
+            super().save(*args, **kwargs) #chamando o método de salvamento padrão do Django
+        else:
+            super().save(*args, **kwargs) #chamando o método de salvamento padrão do Django
+
+
+class Moeda_Usuario(Base):
+#Esta tabela atribui uma moeda a um usuário do sistema efetivamente (deve ser chamada automaticamente pela troca de status da tabela 'Compra')
+
+    STATUS_CHOICES = (
+        ('active', 'Ativo na Conta'),
+        ('sold', 'Vendido'),
+        ('refunded', 'Reembolsado'),
+    )
+
+    usuario = models.ForeignKey('usuarios.CustomUsuario', verbose_name='Usuario', on_delete=models.CASCADE)
+    moeda = models.ForeignKey('core.Moeda', verbose_name='Moeda', on_delete=models.CASCADE)
+    quantidade_reais_compra = models.DecimalField('Quantidade (R$)', max_digits=16, decimal_places=2, default=0)
+    status = models.CharField('Status', max_length=100, null = False, blank = False, default=STATUS_CHOICES[0][0], choices = STATUS_CHOICES)
+    solicitacao = models.ForeignKey('core.Solicitacao_Compra', verbose_name='Compra', on_delete=models.CASCADE, default = 0)
+
+    class Meta:
+        verbose_name = 'Moeda_Usuario'
+        verbose_name_plural = 'Moedas_Usuarios'
