@@ -1,0 +1,11 @@
+{% extends 'registration/baseLogin.html' %}
+{% block content %}
+
+<h1>Área do Cliente</h1>
+
+<div class="alert alert-primary" role="alert">
+  Seja bem-vindo(a) {{ user.get_full_name }}!
+</div>
+<a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
+
+{% endblock %}
