@@ -1,11 +1,79 @@
 {% extends 'registration/baseLogin.html' %}
 {% block content %}
 
-<h1>Área do Cliente</h1>
+<div class="container">
+    
+      <h1>Área do Cliente</h1>
 
-<div class="alert alert-primary" role="alert">
-  Seja bem-vindo(a) {{ user.get_full_name }}!
+      <div class="alert alert-primary" role="alert">
+          Seja bem-vindo(a) {{ user.get_full_name }}!
+      </div>
+      <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
+<br>
+<br>
+<br>
+      <h2>Minhas Moedas</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Moeda</th>
+            <th scope="col">Quantidade (R$)</th>
+            <th scope="col">Data</th>
+            <th scope="col">Vender</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          {% for m in moedas %}
+            
+          <tr>
+            <th scope="row">{{m.moeda}}</th>
+            <th scope="row">R$ {{m.quantidade_reais_compra}}</th>
+            <td colspan="2">{{m.criado}}</td>
+            <td colspan="2"><button type="button" class="btn btn-danger">Vender</button></td>
+          </tr>
+
+          {% endfor %}
+          
+        </tbody>
+      </table>
+
+
+      <table class="table"><thead><th><a class="btn text-dark" data-toggle="collapse" href="#collapseTable" role="button" aria-expanded="false" aria-controls="collapseExample"><h2>Moedas Vendidas ▾</h2></a></th></thead></table>
+
+
+
+      <div class="collapse" id="collapseTable">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Moeda</th>
+            <th scope="col">Quantidade (R$)</th>
+            <th scope="col">Adquirido Em</th>
+            <th scope="col">Vendido Em</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>            
+          <tr class="table-warning">
+            <th scope="row">Moeda X</th>
+            <th scope="row">R$ 50,00</th>
+            <td colspan="2">2 de Fevereiro de 2021</td>
+            <td colspan="2">01 de Maio de 2022</td>
+            <td colspan="2">Venda Solicitada</td>            
+          </tr>
+
+          <tr class="table-success">
+            <th scope="row">Moeda Y</th>
+            <th scope="row">R$ 175,00</th>
+            <td colspan="2">23 de Fevereiro de 2022</td>
+            <td colspan="2">27 de Março de 2022</td>
+            <td colspan="2">Vendido</td>            
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
 </div>
-<a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
 
 {% endblock %}
