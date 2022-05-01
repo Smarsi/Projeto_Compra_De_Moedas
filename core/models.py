@@ -46,7 +46,7 @@ class Solicitacao_Compra(Base):
 
     class Meta:
         verbose_name = 'Solicitação de Compra'
-        verbose_name_plural = 'Solicitações de Compras'
+        verbose_name_plural = 'Solicitações de Compra'
 
     def __str__(self):
         return str(self.pk)
@@ -116,3 +116,67 @@ class Moeda_Usuario(Base):
     class Meta:
         verbose_name = 'Moeda_Usuario'
         verbose_name_plural = 'Moedas_Usuarios'
+
+    def __str__(self):
+        return str(self.pk)
+
+    
+class Solicitacao_Venda(Base):
+
+    STATUS_CHOICES = (
+        ('waiting', 'Solicitado'),
+        ('done', 'Vendido'),
+        ('canceled', 'Cancelado'),
+    )
+
+    nome_venda = models.CharField('Nome Venda', max_length=100, null=False, blank = False, default = f'{uuid.uuid4()}')
+    cliente_venda = models.ForeignKey('usuarios.CustomUsuario', verbose_name='Usuario', on_delete=models.CASCADE)
+    posse = models.ForeignKey('core.Moeda_Usuario', verbose_name='Posse Escolhida', on_delete=models.SET_NULL, null=True)
+    status_venda = models.CharField('Status', max_length=100, null = False, blank = False, default=STATUS_CHOICES[0], choices=STATUS_CHOICES)
+
+    class Meta:
+        verbose_name = 'Solicitação de Venda'
+        verbose_name_plural = 'Solicitações de Venda'
+
+    def __str__(self):
+        return str(self.pk)
+
+    def save(self, *args, **kwargs):
+
+        if self.pk:
+            
+            #Vamos pegar qual atributo foi alterado
+            cls = self.__class__
+            antigo = cls.objects.get(pk=self.pk) #Vamos pegar o status atual do item uma vez que ainda não salvamos a aleteração chamando o salvamento padrão
+            novo = self
+
+            campos_alterados = {}
+            for campo in cls._meta.get_fields():
+                field_name = campo.name
+                try:
+                    if getattr(antigo, field_name) != getattr(novo, field_name):
+                        campos_alterados[field_name] = True
+                    else:
+                        campos_alterados[field_name] = False
+
+                except Exception as ex: # Pega o erro "O campo não existe"
+                    pass
+
+            # Lógica de Salvamento para os campos alterados:
+
+            if campos_alterados['status_venda'] == True: #Alterando o status da moeda para Vendido.
+                if getattr(novo, 'status_venda') == 'done' and getattr(antigo, 'status_venda') == 'waiting':
+                    moeda_cliente = self.moeda_venda
+                    moeda_cliente.status = 'sold'
+                    moeda_cliente.save()
+                    
+                else:
+                    pass
+
+            if campos_alterados['status_venda'] == True:
+                if getattr(novo, 'status_venda') == 'canceled':
+                    self.ativo = False
+
+            super().save(*args, **kwargs) #chamando o método de salvamento padrão do Django
+        else:
+            super().save(*args, **kwargs) #chamando o método de salvamento padrão do Django
