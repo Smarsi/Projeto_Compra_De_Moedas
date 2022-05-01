@@ -75,7 +75,7 @@ class Solicitacao_Compra(Base):
             # Lógica de Salvamento para os campos alterados:
 
             if campos_alterados['status_compra'] == True: #Ativando a moeda na conta do usuário após o pagamento.
-                if getattr(novo, field_name) == 'done' and getattr(antigo, field_name) == 'waiting':
+                if getattr(novo, 'status_compra') == 'done' and getattr(antigo, 'status_compra') == 'waiting':
                     moeda_cliente = Moeda_Usuario(
                         usuario = self.cliente_compra,
                         moeda = self.moeda_compra,
@@ -88,6 +88,10 @@ class Solicitacao_Compra(Base):
                     
                 else:
                     pass
+
+            if campos_alterados['status_compra'] == True:
+                if getattr(novo, 'status_compra') == 'canceled':
+                    self.ativo = False
 
             super().save(*args, **kwargs) #chamando o método de salvamento padrão do Django
         else:

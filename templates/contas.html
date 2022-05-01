@@ -1,0 +1,10 @@
+{% extends 'registration/baseLogin.html' %} 
+{% block content %}
+
+<div class="container">
+  <h1>Olá! Faça Login ou Cadastre-se</h1>
+
+  <a class="btn btn-primary" href="{% url 'login' %}">Login</a>
+  <a class="btn btn-primary" href="{% url 'registrar' %}">Cadastre-se</a>
+
+{% endblock %}
