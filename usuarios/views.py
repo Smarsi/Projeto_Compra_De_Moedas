@@ -22,20 +22,6 @@ class ContasView(View):
         else:
             return redirect('profile')
 
-            
-
-'''
-class ContasView(TemplateView):
-    template_name = 'contas.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(ContasView, self).get_context_data(**kwargs)
-        
-
-        #context['produtos'] = Produto.objects.all()
-
-        return context
-'''
 
 class ProfileView(TemplateView):
     template_name = 'profile.html'
@@ -43,8 +29,18 @@ class ProfileView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ProfileView, self).get_context_data(**kwargs)
 
-        context['moedas'] = Moeda_Usuario.objects.filter(usuario=self.request.user)
-        print(context)
+        moedas = Moeda_Usuario.objects.filter(usuario=self.request.user)
+
+        moedas_vendidas = []
+        moedas_ativas = []
+        for m in moedas:
+            if m.status != 'active':
+                moedas_vendidas.append(m)
+            else:
+                moedas_ativas.append(m)
+
+        context['moedas_ativas'] = moedas_ativas
+        context['moedas_vendidas'] = moedas_vendidas
 
         return context
 

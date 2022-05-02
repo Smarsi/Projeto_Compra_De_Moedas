@@ -1,8 +1,8 @@
 from django import forms
 
+from .models import Solicitacao_Compra
+
 class ContratacaoForm(forms.Form):
-    cliente = forms.CharField()
-    moeda = forms.CharField()
-    quantidade = forms.DecimalField()
-    valor_moeda = forms.DecimalField
-    valor_total = quantidade * valor_moeda
+    class Meta:
+        model = Solicitacao_Compra
+        fields = 'cliente_compra', 'moeda_compra', 'quantidade_reais_compra'

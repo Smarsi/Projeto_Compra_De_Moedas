@@ -24,7 +24,7 @@
         </thead>
         <tbody>
 
-          {% for m in moedas %}
+          {% for m in moedas_ativas %}
             
           <tr>
             <th scope="row">{{m.moeda}}</th>
@@ -54,22 +54,20 @@
             <th scope="col">Status</th>
           </tr>
         </thead>
-        <tbody>            
-          <tr class="table-warning">
-            <th scope="row">Moeda X</th>
-            <th scope="row">R$ 50,00</th>
-            <td colspan="2">2 de Fevereiro de 2021</td>
-            <td colspan="2">01 de Maio de 2022</td>
-            <td colspan="2">Venda Solicitada</td>            
+        <tbody>       
+          
+          {% for m in moedas_vendidas %}
+          
+            
+            {% if m.status == 'waiting' %}<tr class="table-warning">{% elif m.status == 'sold' %}<tr class="table-success">{% endif %}
+            <th scope="row">{{m.moeda}}</th>
+            <th scope="row">R$ {{m.quantidade_reais_compra}}</th>
+            <td colspan="2">{{m.criado}}</td>
+            <td colspan="2">{{m.modificado}}</td>
+            {% if m.status == 'waiting' %}<td colspan="2">Venda Solicitada</td>{% elif m.status == 'sold' %}<td colspan="2">Vendido</td>{% endif %}            
           </tr>
+          {% endfor %}
 
-          <tr class="table-success">
-            <th scope="row">Moeda Y</th>
-            <th scope="row">R$ 175,00</th>
-            <td colspan="2">23 de Fevereiro de 2022</td>
-            <td colspan="2">27 de Março de 2022</td>
-            <td colspan="2">Vendido</td>            
-          </tr>
         </tbody>
       </table>
     </div>
