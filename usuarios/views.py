@@ -44,6 +44,9 @@ class ProfileView(TemplateView):
 
         return context
 
+    def Vender(id):
+        print("Entrou")
+
 class register(generic.CreateView):
     form_class = CustomUsuarioCreateForm
     success_url = reverse_lazy('login')

@@ -30,7 +30,7 @@
             <th scope="row">{{m.moeda}}</th>
             <th scope="row">R$ {{m.quantidade_reais_compra}}</th>
             <td colspan="2">{{m.criado}}</td>
-            <td colspan="2"><button type="button" class="btn btn-danger">Vender</button></td>
+            <td colspan="2"><a action="Vender({{m.id}})"><button type="button" class="btn btn-danger">Vender</button></a></td>
           </tr>
 
           {% endfor %}

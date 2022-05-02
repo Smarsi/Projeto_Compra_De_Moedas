@@ -1,8 +1,19 @@
+from django.forms import ModelForm
 from django import forms
 
-from .models import Solicitacao_Compra
+from .models import Solicitacao_Compra, Solicitacao_Venda
 
-class ContratacaoForm(forms.Form):
+
+class CompraForm(ModelForm):
     class Meta:
         model = Solicitacao_Compra
-        fields = 'cliente_compra', 'moeda_compra', 'quantidade_reais_compra'
+        fields = ['moeda_compra', 'quantidade_reais_compra']
+    
+
+class VendaForm(ModelForm):
+
+    usuario = forms.CharField
+
+    class Meta:
+        model = Solicitacao_Venda
+        fields = ['posse']
