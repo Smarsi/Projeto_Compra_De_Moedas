@@ -6,7 +6,7 @@ class CustomUsuarioCreateForm(UserCreationForm): #Criação de Usuário
 
     class Meta:
         model = CustomUsuario
-        fields = ('username', 'first_name', 'last_name', 'fone') #Exatamente os mesmos campos que definimos no REQUIRED_FIELDS do models.
+        fields = ('username', 'first_name', 'last_name', 'cpf', 'fone') #Exatamente os mesmos campos que definimos no REQUIRED_FIELDS do models.
         labels = {'username': 'Username/E-mail'}
 
     def save(self, commit=True):
@@ -21,5 +21,5 @@ class CustomUsuarioChangeForm(UserChangeForm): #Edição de Usuário
 
     class Meta:
         model = CustomUsuario
-        fields = ('first_name', 'last_name', 'fone')
+        fields = ('first_name', 'last_name', 'cpf', 'fone')
 

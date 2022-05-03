@@ -1,0 +1,7 @@
+Solicitação de compra:
+
+#se o usuário ja tem a posse da moeda pedida -> A posse será editada e a valor somado com a nova compra
+
+#O usuario pode vender apenas uma parcela da posse dele (criar uma solicitação de venda e atualizar o valor da posse)
+
+#

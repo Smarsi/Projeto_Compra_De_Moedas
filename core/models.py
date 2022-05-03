@@ -41,7 +41,7 @@ class Solicitacao_Compra(Base):
     nome_compra = models.CharField('Nome Compra', max_length=100, null=False, blank = False, editable=False, default = f'{uuid.uuid4()}')
     cliente_compra = models.ForeignKey('usuarios.CustomUsuario', verbose_name='Usuario', on_delete=models.CASCADE)
     moeda_compra = models.ForeignKey('core.Moeda', verbose_name='Moeda Escolhida', on_delete=models.SET_NULL, null=True)
-    quantidade_reais_compra = models.DecimalField('Quantidade (R$)', max_digits=16, decimal_places=2, default=0)
+    quantidade_reais_compra = models.DecimalField('Quantidade (R$)', max_digits=16, decimal_places=2)
     status_compra = models.CharField('Status', max_length=100, null = False, blank = False, default=STATUS_CHOICES[0], choices=STATUS_CHOICES)
 
     class Meta:
@@ -110,9 +110,9 @@ class Moeda_Usuario(Base):
 
     usuario = models.ForeignKey('usuarios.CustomUsuario', verbose_name='Usuario', on_delete=models.CASCADE)
     moeda = models.ForeignKey('core.Moeda', verbose_name='Moeda', on_delete=models.CASCADE)
-    quantidade_reais_compra = models.DecimalField('Quantidade (R$)', max_digits=16, decimal_places=2, default=0)
+    quantidade_reais_compra = models.DecimalField('Quantidade (R$)', max_digits=16, decimal_places=2)
     status = models.CharField('Status', max_length=100, null = False, blank = False, default=STATUS_CHOICES[0][0], choices = STATUS_CHOICES)
-    solicitacao = models.ForeignKey('core.Solicitacao_Compra', verbose_name='Compra', on_delete=models.CASCADE, default = 0)
+    solicitacao = models.ForeignKey('core.Solicitacao_Compra', verbose_name='Compra', on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Moeda_Usuario'

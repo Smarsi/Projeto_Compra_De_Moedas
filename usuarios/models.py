@@ -1,6 +1,7 @@
 from django.db import models
 
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from cpf_field.models import CPFField #Usado para validação de CPF
 
 class UsuarioManager(BaseUserManager):
 
@@ -35,10 +36,11 @@ class UsuarioManager(BaseUserManager):
 class CustomUsuario(AbstractUser):
     email = models.EmailField('E-mail', unique=True)
     fone = models.CharField('Telefone', max_length=15, default='')
+    cpf = CPFField('cpf', max_length=11, unique=True)
     if_staff = models.BooleanField('Membro de equipe', default=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'fone'] # O E-mail e senha por serem utilizados para login serão OBRIGATÓRIOS por padrão pelo DJango.
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'cpf', 'fone'] # O E-mail e senha por serem utilizados para login serão OBRIGATÓRIOS por padrão pelo DJango.
 
     def __str__(self):
         return self.email
