@@ -6,6 +6,7 @@ from django.views import generic
 from .forms import CustomUsuarioCreateForm
 
 from core.models import Moeda_Usuario
+from .models import CustomUsuario
 
 #from .models import Produto
 

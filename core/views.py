@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 from .models import Solicitacao_Compra, Solicitacao_Venda, Moeda_Usuario
-from .forms import CompraForm, VendaForm
+from .forms import CompraForm #VendaForm
 
 
 class IndexView(TemplateView):
@@ -76,7 +76,7 @@ def NovaCompra(request):
     elif(request.method == 'GET'):
         return render(request, 'forms/compra.html', {'form': form})
 
-
+'''
 @login_required
 def NovaVenda(request, id):
 
@@ -102,3 +102,4 @@ def NovaVenda(request, id):
         print(nova_venda)
 
         return render(request, 'forms/venda.html', {'form': form, 'item': nova_venda})
+    '''

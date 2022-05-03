@@ -38,11 +38,12 @@ class CustomUsuario(AbstractUser):
     fone = models.CharField('Telefone', max_length=15, default='')
     cpf = CPFField('cpf', max_length=11, unique=True)
     if_staff = models.BooleanField('Membro de equipe', default=True)
+    saldo = models.DecimalField('Saldo (R$)', max_digits=16, decimal_places=2, default=0.00)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'cpf', 'fone'] # O E-mail e senha por serem utilizados para login serão OBRIGATÓRIOS por padrão pelo DJango.
 
     def __str__(self):
-        return self.email
+        return str(self.email)
 
     objects = UsuarioManager() #Temos que adicionar essa configuração para dizer ao DJango que o UserManager utilizado deve ser esse. Se não definirmos isso o DJango usará o UserManager padrão do sistema (e consequentimente a autenticação por e-mail não irá funcionar).

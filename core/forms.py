@@ -9,7 +9,7 @@ class CompraForm(ModelForm):
         model = Solicitacao_Compra
         fields = ['moeda_compra', 'quantidade_reais_compra']
     
-
+'''
 class VendaForm(ModelForm):
 
     usuario = forms.CharField
@@ -17,3 +17,4 @@ class VendaForm(ModelForm):
     class Meta:
         model = Solicitacao_Venda
         fields = ['posse']
+'''
