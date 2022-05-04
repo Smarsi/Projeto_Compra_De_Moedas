@@ -74,7 +74,7 @@ class Solicitacao_Deposito(Base):
 
             # Lógica de Salvamento para os campos alterados:
             
-            if campos_alterados['status_deposito'] == True: #Ativando a moeda na conta do usuário após o pagamento.
+            if campos_alterados['status_deposito'] == True: #Ativando o valor na conta do usuário após o pagamento (saldo).
                 if getattr(novo, 'status_deposito') == 'done' and getattr(antigo, 'status_deposito') == 'waiting': 
                     saldo_cliente = CustomUsuario.objects.get(username=self.cliente_deposito) #Se o deposito for marcado como "done" iremos somar o valor do deposito na conta do cliente
                     CustomUsuario.objects.filter(pk=saldo_cliente.pk).update(saldo = saldo_cliente.saldo + self.quantidade_reais_deposito)
@@ -144,7 +144,7 @@ class Solicitacao_Compra(Base):
                     if moeda_cliente:
                         # Se o usuário já tiver essa moeda cadastrada nas posses
                         item = Moeda_Usuario.objects.get(moeda=self.moeda_compra)
-                        Moeda_Usuario.objects.filter(moeda = self.moeda_compra).update(quantidade_moeda= item.quantidade_moeda+self.quantidade_moeda)
+                        Moeda_Usuario.objects.filter(moeda = self.moeda_compra).update(quantidade_moeda= item.quantidade_moeda+self.quantidade_moeda, ativo=True)
                     else:
                         # Se o usuário não tiver esse registro de moeda
                         moeda_cliente = Moeda_Usuario(
@@ -220,6 +220,11 @@ class Moeda_Usuario(Base):
                     pass
 
             # Lógica de Salvamento para os campos alterados:
+
+            if campos_alterados['quantidade_moeda'] == True:
+
+                if getattr(novo, 'quantidade_moeda') <= 0 and getattr(antigo, 'quantidade_moeda') > 0:
+                    self.ativo = False                    
                     
             super().save(*args, **kwargs) #chamando o método de salvamento padrão do Django
         else:
@@ -237,7 +242,8 @@ class Solicitacao_Venda(Base):
     nome_venda = models.CharField('Nome Venda', max_length=100, null=False, blank = False, default = f'{uuid.uuid4()}')
     cliente_venda = models.ForeignKey('usuarios.CustomUsuario', verbose_name='Usuario', on_delete=models.CASCADE)
     moeda = models.ForeignKey('core.Moeda_Usuario', verbose_name='Posse Escolhida', on_delete=models.SET_NULL, null=True)
-    valor_vendido = models.DecimalField('Quantidade', max_digits=24, decimal_places=8)
+    quantidade_venda = models.DecimalField('Quantidade', max_digits=24, decimal_places=8)
+    valor_reais_venda = models.DecimalField('Valor (R$)', max_digits=16, decimal_places=2, default=0.00)
     status_venda = models.CharField('Status', max_length=100, null = False, blank = False, default=STATUS_CHOICES[0][0], choices=STATUS_CHOICES)
 
     class Meta:
@@ -271,10 +277,16 @@ class Solicitacao_Venda(Base):
             # Lógica de Salvamento para os campos alterados:
 
             if campos_alterados['status_venda'] == True:
+
+                if getattr(novo, 'status_venda') == 'done' and getattr(antigo, 'status_venda') == 'waiting':
+                    user = CustomUsuario.objects.get(username=self.cliente_venda)
+                    CustomUsuario.objects.filter(pk=user.pk).update(saldo = user.saldo + self.valor_reais_venda)
+
                 if getattr(novo, 'status_venda') == 'canceled':
                     self.ativo = False  
-                    saldo_moeda = Moeda_Usuario.objects.get(usuario = self.cliente_venda)
-                    Moeda_Usuario.objects.filter(pk=saldo_moeda.pk).update(quantidade_moeda = saldo_moeda.quantidade_moeda + self.valor_vendido)
+                    saldo_moeda = Moeda_Usuario.objects.get(pk= self.moeda.pk, usuario = self.cliente_venda)
+                    Moeda_Usuario.objects.filter(pk=saldo_moeda.pk).update(quantidade_moeda = saldo_moeda.quantidade_moeda + self.quantidade_venda)
+                    print(self)
 
             super().save(*args, **kwargs) #chamando o método de salvamento padrão do Django
         else:
@@ -283,12 +295,69 @@ class Solicitacao_Venda(Base):
             # Vamos verificar se ele tem o saldo que está solicitando venda
             #Vamos subtrair o valor da venda da posse do usuário
         
-            saldo_moeda = Moeda_Usuario.objects.get(usuario = self.cliente_venda)
+            saldo_moeda = Moeda_Usuario.objects.get(pk= self.moeda.pk, usuario = self.cliente_venda)
 
-            if(saldo_moeda.quantidade_moeda < self.valor_vendido):
+            if(saldo_moeda.quantidade_moeda < self.quantidade_venda):
                 raise ValidationError("Quantidade de cripto insuficiente")
-                return err
                 err = "SALDO CRIPTO INSUFICIENTE"
+                return err
             else:
-                Moeda_Usuario.objects.filter(pk=saldo_moeda.pk).update(quantidade_moeda = saldo_moeda.quantidade_moeda - self.valor_vendido)
+                Moeda_Usuario.objects.filter(pk=saldo_moeda.pk).update(quantidade_moeda = saldo_moeda.quantidade_moeda - self.quantidade_venda)
+                if((saldo_moeda.quantidade_moeda - self.quantidade_venda) == 0):
+                    Moeda_Usuario.objects.filter(pk=saldo_moeda.pk).update(ativo=False)
                 super().save(*args, **kwargs) #chamando o método de salvamento padrão do Django
+
+class Saque(Base):
+    STATUS_CHOICES = (
+        ('waiting', 'Solicitado'),
+        ('done', 'Efetuado'),
+        ('canceled', 'Cancelado'),
+    )
+
+    nome_saque = models.CharField('Nome Saque', max_length=100, null=False, blank = False, default = f'{uuid.uuid4()}')
+    valor_saque = models.DecimalField('Valor a ser sacado', max_digits=16, decimal_places=2)
+    destino_saque = models.CharField('Descrição do Saque', max_length=1000, blank=False, null=False)
+    cliente_saque = models.ForeignKey('usuarios.CustomUsuario', verbose_name='Usuario', on_delete=models.CASCADE)
+    status_saque = models.TextField('Status', max_length=100, null = False, blank = False, default=STATUS_CHOICES[0][0], choices=STATUS_CHOICES)
+
+    class Meta:
+        verbose_name = 'Solicitação de Saque'
+        verbose_name_plural = 'Solicitações de Saque'
+
+    def __str__(self): 
+        return str(self.pk)
+
+    def save(self, *args, **kwargs):
+
+        if self.pk:
+            #Vamos pegar qual atributo foi alterado
+            cls = self.__class__
+            antigo = cls.objects.get(pk=self.pk) #Vamos pegar o status atual do item uma vez que ainda não salvamos a aleteração chamando o salvamento padrão
+            novo = self
+
+            campos_alterados = {}
+            for campo in cls._meta.get_fields():
+                field_name = campo.name
+                try:
+                    if getattr(antigo, field_name) != getattr(novo, field_name):
+                        campos_alterados[field_name] = True
+                    else:
+                        campos_alterados[field_name] = False
+
+                except Exception as ex: # Pega o erro "O campo não existe"
+                    pass
+
+            # Lógica de Salvamento para os campos alterados:
+
+            #if campos_alterados['status_saque'] == True:
+
+            super().save(*args, **kwargs) #chamando o método de salvamento padrão do Django
+        else:
+
+            saldo_cliente = CustomUsuario.objects.get(email=self.cliente_saque)
+            if((saldo_cliente.saldo - self.valor_saque) > 0):
+                CustomUsuario.objects.filter(pk=saldo_cliente.pk).update(saldo = saldo_cliente.saldo - self.valor_saque)
+                super().save(*args, **kwargs) #chamando o método de salvamento padrão do Django
+            else:
+                raise ValidationError("Está tentando sacar um valor maior que o disponível em conta")
+            

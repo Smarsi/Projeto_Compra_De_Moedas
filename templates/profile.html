@@ -7,7 +7,7 @@
 
       <div class="alert alert-primary" role="alert">
           Seja bem-vindo(a) {{ user.get_full_name }}!
-          Seu saldo é: R${{user.saldo}}
+          Seu saldo é: R${{user.saldo}} <a href="">saque</a> / <a href="">depositar</a>
       </div>
       <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
 <br>
@@ -38,7 +38,7 @@
       </table>
 
 
-      <table class="table"><thead><th><a class="btn text-dark" data-toggle="collapse" href="#collapseTable" role="button" aria-expanded="false" aria-controls="collapseExample"><h2>Moedas Vendidas ▾</h2></a></th></thead></table>
+      <table class="table"><thead><th><a class="btn text-dark" data-toggle="collapse" href="#collapseTable" role="button" aria-expanded="false" aria-controls="collapseExample"><h2>Minhas Solicitações de Venda ▾</h2></a></th></thead></table>
 
 
 
@@ -47,23 +47,23 @@
         <thead>
           <tr>
             <th scope="col">Moeda</th>
-            <th scope="col">Quantidade (R$)</th>
-            <th scope="col">Adquirido Em</th>
-            <th scope="col">Vendido Em</th>
+            <th scope="col">Quantidade</th>
+            <th scope="col">Valor (R$)</th>
+            <th scope="col">Solicitado Em</th>
             <th scope="col">Status</th>
           </tr>
         </thead>
         <tbody>       
           
-          {% for m in moedas_vendidas %}
+          {% for m in solicitacoes_venda %}
           
             
-            {% if m.status == 'waiting' %}<tr class="table-warning">{% elif m.status == 'sold' %}<tr class="table-success">{% endif %}
+            {% if m.status_venda == 'waiting' %}<tr class="table-warning">{% elif m.status_venda == 'done' %}<tr class="table-success">{% endif %}
             <th scope="row">{{m.moeda}}</th>
-            <th scope="row">R$ {{m.quantidade_reais_compra}}</th>
+            <th scope="row">{{m.quantidade_venda}}</th>
+            <th scope="row">{{m.valor_reais_venda}}</th>
             <td colspan="2">{{m.criado}}</td>
-            <td colspan="2">{{m.modificado}}</td>
-            {% if m.status == 'waiting' %}<td colspan="2">Venda Solicitada</td>{% elif m.status == 'sold' %}<td colspan="2">Vendido</td>{% endif %}            
+            {% if m.status_venda == 'waiting' %}<td colspan="2">Venda Solicitada</td>{% elif m.status_venda == 'done' %}<td colspan="2">Vendido</td>{% endif %}            
           </tr>
           {% endfor %}
 

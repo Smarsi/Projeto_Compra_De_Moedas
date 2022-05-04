@@ -1,11 +1,15 @@
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, FormView
+from django.views import generic
+from django.urls import reverse_lazy
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.http import HttpResponse
 from django.core.paginator import Paginator
-from .models import Solicitacao_Compra, Solicitacao_Venda, Moeda_Usuario
-from .forms import CompraForm #VendaForm
+from .models import Solicitacao_Compra, Solicitacao_Venda, Moeda_Usuario, Saque, Solicitacao_Deposito
+from .forms import CompraForm, VendaForm, DepositoForm, SaqueForm
+
 
 
 class IndexView(TemplateView):
@@ -76,30 +80,69 @@ def NovaCompra(request):
     elif(request.method == 'GET'):
         return render(request, 'forms/compra.html', {'form': form})
 
-'''
-@login_required
-def NovaVenda(request, id):
 
-    form = VendaForm()
+
+@login_required
+def NovaVenda(request):
+    template_name = 'forms/venda.html'
+    form = VendaForm(request.user.id, request.POST or None)
 
     if(request.method == 'POST'):
-        form = VendaForm(request.POST)
+        form = VendaForm( request.user.id, request.POST)
 
         if(form.is_valid()):
-            posse = form.cleaned_data['posse']
             cliente_venda = request.user
+            moeda = form.cleaned_data['moeda']
+            quantidade_venda = form.cleaned_data['quantidade_venda']        
 
-
-            nova_venda = Solicitacao_Venda(posse=posse, cliente_venda=cliente_venda, status_venda='waiting')
+            nova_venda = Solicitacao_Venda(cliente_venda=cliente_venda, moeda=moeda, quantidade_venda=quantidade_venda)
             nova_venda.save()
 
+            messages.success(request, 'Solicitação de venda enviada com sucesso')
+
             return redirect('profile')
-        
+
     elif(request.method == 'GET'):
+        return render(request, 'forms/venda.html', {'form': form})
 
-        nova_venda = Moeda_Usuario.objects.filter(id=id)
 
-        print(nova_venda)
+@login_required
+def NovoDeposito(request):
+    template_name = 'forms/depoisto.html'   
+    form = DepositoForm()
 
-        return render(request, 'forms/venda.html', {'form': form, 'item': nova_venda})
-    '''
+    if(request.method == 'POST'):
+        form = DepositoForm()
+
+        if (form.is_valid()):
+            cliente_deposito = request.user
+            quantidade_reais_deposito = form.cleaned_data['quantidade_reais_deposito']
+
+            novo_deposito = Solicitacao_Deposito(cliente_deposito=cliente_deposito, quantidade_reais_deposito=quantidade_reais_deposito)
+            novo_deposito.save()
+
+            return redirect('profile')
+
+    elif(request.method == 'GET'):
+        return render(request, 'forms/deposito.html', {'form': form})
+
+@login_required
+def NovoSaque(request):
+    template_name = 'forms/saque.html'   
+    form = SaqueForm()
+
+    if(request.method == 'POST'):
+        form = SaqueForm()
+
+        if (form.is_valid()):
+            cliente_saque = request.user
+            valor_saque = form.cleaned_data['valor_saque']
+            destino_saque = form.cleaned_data['destino_saque']
+
+            novo_saque = Saque(cliente_saque=cliente_saque, valor_saque=valor_saque)
+            novo_saque.save()
+
+            return redirect('profile')
+
+    elif(request.method == 'GET'):
+        return render(request, 'forms/saque.html', {'form': form})

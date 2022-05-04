@@ -5,7 +5,9 @@ from django.urls import reverse_lazy
 from django.views import generic
 from .forms import CustomUsuarioCreateForm
 
-from core.models import Moeda_Usuario
+from django.contrib.auth.decorators import login_required
+
+from core.models import Moeda_Usuario, Solicitacao_Venda
 from .models import CustomUsuario
 
 #from .models import Produto
@@ -31,17 +33,16 @@ class ProfileView(TemplateView):
         context = super(ProfileView, self).get_context_data(**kwargs)
 
         moedas = Moeda_Usuario.objects.filter(usuario=self.request.user)
+        solicitacoes_venda = Solicitacao_Venda.objects.filter(cliente_venda=self.request.user)
 
-        moedas_vendidas = []
         moedas_ativas = []
         for m in moedas:
-            if m.status != 'active':
-                moedas_vendidas.append(m)
-            else:
-                moedas_ativas.append(m)
+            if m.status == 'active':
+                if m.ativo == True:
+                    moedas_ativas.append(m)
 
         context['moedas_ativas'] = moedas_ativas
-        context['moedas_vendidas'] = moedas_vendidas
+        context['solicitacoes_venda'] = solicitacoes_venda
 
         return context
 
