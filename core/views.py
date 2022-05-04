@@ -109,16 +109,17 @@ def NovaVenda(request):
 @login_required
 def NovoDeposito(request):
     template_name = 'forms/depoisto.html'   
-    form = DepositoForm()
+    form = DepositoForm(request.POST)
 
     if(request.method == 'POST'):
-        form = DepositoForm()
+        form = DepositoForm(request.POST)
 
         if (form.is_valid()):
             cliente_deposito = request.user
             quantidade_reais_deposito = form.cleaned_data['quantidade_reais_deposito']
+            status_deposito = 'waiting'
 
-            novo_deposito = Solicitacao_Deposito(cliente_deposito=cliente_deposito, quantidade_reais_deposito=quantidade_reais_deposito)
+            novo_deposito = Solicitacao_Deposito(cliente_deposito=cliente_deposito, quantidade_reais_deposito=quantidade_reais_deposito, status_deposito=status_deposito)
             novo_deposito.save()
 
             return redirect('profile')
@@ -129,12 +130,12 @@ def NovoDeposito(request):
 @login_required
 def NovoSaque(request):
     template_name = 'forms/saque.html'   
-    form = SaqueForm()
+    form = SaqueForm(request.POST)
 
     if(request.method == 'POST'):
-        form = SaqueForm()
+        form = SaqueForm(request.POST)
 
-        if (form.is_valid()):
+        if(form.is_valid()):
             cliente_saque = request.user
             valor_saque = form.cleaned_data['valor_saque']
             destino_saque = form.cleaned_data['destino_saque']

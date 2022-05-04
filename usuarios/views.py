@@ -7,7 +7,7 @@ from .forms import CustomUsuarioCreateForm
 
 from django.contrib.auth.decorators import login_required
 
-from core.models import Moeda_Usuario, Solicitacao_Venda
+from core.models import Moeda_Usuario, Solicitacao_Venda, Solicitacao_Compra, Solicitacao_Deposito, Saque
 from .models import CustomUsuario
 
 #from .models import Produto
@@ -34,6 +34,9 @@ class ProfileView(TemplateView):
 
         moedas = Moeda_Usuario.objects.filter(usuario=self.request.user)
         solicitacoes_venda = Solicitacao_Venda.objects.filter(cliente_venda=self.request.user)
+        solicitacoes_compra = Solicitacao_Compra.objects.filter(cliente_compra=self.request.user)
+        solicitacoes_saque = Saque.objects.filter(cliente_saque=self.request.user)
+        solicitacoes_deposito = Solicitacao_Deposito.objects.filter(cliente_deposito=self.request.user)
 
         moedas_ativas = []
         for m in moedas:
@@ -43,6 +46,9 @@ class ProfileView(TemplateView):
 
         context['moedas_ativas'] = moedas_ativas
         context['solicitacoes_venda'] = solicitacoes_venda
+        context['solicitacoes_saque'] = solicitacoes_saque
+        context['solicitacoes_deposito'] = solicitacoes_deposito
+        context['solicitacoes_compra'] = solicitacoes_compra
 
         return context
 

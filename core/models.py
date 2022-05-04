@@ -85,7 +85,12 @@ class Solicitacao_Deposito(Base):
             
             super().save(*args, **kwargs) #chamando o método de salvamento padrão do Django
         else:
-            super().save(*args, **kwargs) #chamando o método de salvamento padrão do Django
+
+            if(self.quantidade_reais_deposito) > 0:
+                super().save(*args, **kwargs) #chamando o método de salvamento padrão do Django
+            else:
+                raise ValidationError("Você não pode depositar este valor")
+            
 
 
 class Solicitacao_Compra(Base):
@@ -316,9 +321,9 @@ class Saque(Base):
 
     nome_saque = models.CharField('Nome Saque', max_length=100, null=False, blank = False, default = f'{uuid.uuid4()}')
     valor_saque = models.DecimalField('Valor a ser sacado', max_digits=16, decimal_places=2)
-    destino_saque = models.CharField('Descrição do Saque', max_length=1000, blank=False, null=False)
+    destino_saque = models.TextField('Descrição do Saque', max_length=1000, blank=False, null=False)
     cliente_saque = models.ForeignKey('usuarios.CustomUsuario', verbose_name='Usuario', on_delete=models.CASCADE)
-    status_saque = models.TextField('Status', max_length=100, null = False, blank = False, default=STATUS_CHOICES[0][0], choices=STATUS_CHOICES)
+    status_saque = models.CharField('Status', max_length=100, null = False, blank = False, default=STATUS_CHOICES[0][0], choices=STATUS_CHOICES)
 
     class Meta:
         verbose_name = 'Solicitação de Saque'
@@ -353,11 +358,13 @@ class Saque(Base):
 
             super().save(*args, **kwargs) #chamando o método de salvamento padrão do Django
         else:
-
-            saldo_cliente = CustomUsuario.objects.get(email=self.cliente_saque)
-            if((saldo_cliente.saldo - self.valor_saque) > 0):
-                CustomUsuario.objects.filter(pk=saldo_cliente.pk).update(saldo = saldo_cliente.saldo - self.valor_saque)
-                super().save(*args, **kwargs) #chamando o método de salvamento padrão do Django
+            if(self.valor_saque) > 0: #Prevenindo o saque negativo
+                saldo_cliente = CustomUsuario.objects.get(email=self.cliente_saque)
+                if((saldo_cliente.saldo - self.valor_saque) > 0):
+                    CustomUsuario.objects.filter(pk=saldo_cliente.pk).update(saldo = saldo_cliente.saldo - self.valor_saque)
+                    super().save(*args, **kwargs) #chamando o método de salvamento padrão do Django
+                else:
+                    raise ValidationError("Está tentando sacar um valor maior que o disponível em conta")
             else:
-                raise ValidationError("Está tentando sacar um valor maior que o disponível em conta")
+                raise ValidationError("Você não pode sacar este valor")
             
