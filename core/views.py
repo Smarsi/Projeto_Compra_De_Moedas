@@ -140,7 +140,7 @@ def NovoSaque(request):
             valor_saque = form.cleaned_data['valor_saque']
             destino_saque = form.cleaned_data['destino_saque']
 
-            novo_saque = Saque(cliente_saque=cliente_saque, valor_saque=valor_saque)
+            novo_saque = Saque(cliente_saque=cliente_saque, valor_saque=valor_saque, destino_saque=destino_saque)
             novo_saque.save()
 
             return redirect('profile')

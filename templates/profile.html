@@ -1,75 +1,246 @@
-{% extends 'registration/baseLogin.html' %}
-{% block content %}
+{% extends 'registration/baseLogin.html' %} {% block content %}
 
-<div class="container">
-    
-      <h1>Área do Cliente</h1>
+<div class="container" style="margin-top: 20%;">
+  <h1>Área do Cliente</h1>
 
-      <div class="alert alert-primary" role="alert">
-          Seja bem-vindo(a) {{ user.get_full_name }}!
-          Seu saldo é: R${{user.saldo}} <a href="{% url 'novo_saque' %}">saque</a> / <a href="{% url 'novo_deposito' %}">depositar</a>
-      </div>
-      <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
-<br>
-<br>
-<br>
-      <h2>Minhas Moedas</h2>
+  <div class="alert alert-primary" role="alert">
+    Seja bem-vindo(a) {{ user.get_full_name }}! Seu saldo é: R${{user.saldo}}
+    <a href="{% url 'novo_saque' %}">sacar</a> /
+    <a href="{% url 'novo_deposito' %}">depositar</a> /
+    <a href="{% url 'nova_compra' %}">comprar</a> /
+    <a href="{% url 'nova_venda' %}">vender</a> /
+
+  </div>
+  <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
+  <br />
+  <br />
+  <br />
+  <h2>Minhas Moedas</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Moeda</th>
+        <th scope="col">Quantidade</th>
+        <th scope="col">Data da Compra</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for m in moedas_ativas %}
+
+      <tr>
+        <th scope="row">{{m.moeda}}</th>
+        <th scope="row">{{m.quantidade_moeda}}</th>
+        <td colspan="2">{{m.criado}}</td>
+      </tr>
+
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- ÁREA DE SOLICITAÇÕES DE VENDA -->
+
+  <table class="table">
+    <thead>
+      <th>
+        <a
+          class="btn text-dark"
+          data-toggle="collapse"
+          href="#collapseTable"
+          role="button"
+          aria-expanded="false"
+          aria-controls="collapseExample"
+          ><h2>Minhas Solicitações de Venda ▾</h2></a
+        >
+      </th>
+    </thead>
+  </table>
+
+  <div class="collapse" id="collapseTable">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Moeda</th>
+          <th scope="col">Quantidade</th>
+          <th scope="col">Valor (R$)</th>
+          <th scope="col">Solicitado Em</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for m in solicitacoes_venda %} {% if m.status_venda == 'waiting' %}
+        <tr class="table-warning">
+          {% elif m.status_venda == 'done' %}
+        </tr>
+        <tr class="table-success">
+          {% endif %}
+          <th scope="row">{{m.moeda}}</th>
+          <th scope="row">{{m.quantidade_venda}}</th>
+          <th scope="row">{{m.valor_reais_venda}}</th>
+          <td colspan="2">{{m.criado}}</td>
+          {% if m.status_venda == 'waiting' %}
+          <td colspan="2">Venda Solicitada</td>
+          {% elif m.status_venda == 'done' %}
+          <td colspan="2">Vendido</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FIM Área de Solicitações de Venda -->
+
+  <!-- ÁREA DE SOLICITAÇÕES DE Compra -->
+
+  <table class="table">
+    <thead>
+      <th>
+        <a
+          class="btn text-dark"
+          data-toggle="collapse"
+          href="#collapseTable2"
+          role="button"
+          aria-expanded="false"
+          aria-controls="collapseExample2"
+          ><h2>Minhas Solicitações de Compra ▾</h2></a
+        >
+      </th>
+    </thead>
+  </table>
+
+  <div class="collapse" id="collapseTable2">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Moeda</th>
+          <th scope="col">Quantidade</th>
+          <th scope="col">Valor (R$)</th>
+          <th scope="col">Solicitado Em</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in solicitacoes_compra %} {% if c.status_compra == 'waiting' %}
+        <tr class="table-warning">
+          {% elif c.status_compra == 'done' %}
+        </tr>
+        <tr class="table-success">
+          {% endif %}
+          <th scope="row">{{c.moeda_compra}}</th>
+          <th scope="row">{% if c.quantidade_moeda == null %} - {% elif c.quantidade_moeda %} {{c.quantidade_moeda}} {% endif %}</th>
+          <th scope="row">{{c.quantidade_reais_compra}}</th>
+          <td colspan="2">{{c.criado}}</td>
+          {% if c.status_compra == 'waiting' %}
+          <td colspan="2">Esperando Pagamento</td>
+          {% elif c.status_compra == 'done' %}
+          <td colspan="2">Compra Aprovada</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FIM Área de Solicitações de Compra -->
+
+  <!-- ÁREA DE SOLICITAÇÕES DE Saque -->
+
+  <table class="table">
+    <thead>
+      <th>
+        <a
+          class="btn text-dark"
+          data-toggle="collapse"
+          href="#collapseTable3"
+          role="button"
+          aria-expanded="false"
+          aria-controls="collapseExample2"
+          ><h2>Meus Saques ▾</h2></a
+        >
+      </th>
+    </thead>
+  </table>
+
+  <div class="collapse" id="collapseTable3">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Valor do Saque (R$)</th>
+          <th scope="col">Destino do Saque</th>
+          <th scope="col">Solicitado Em</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in solicitacoes_saque %} {% if s.status_saque == 'waiting' %}
+        <tr class="table-warning">
+          {% elif s.status_saque == 'done' %}
+        </tr>
+        <tr class="table-success">
+          {% endif %}
+          <th scope="row">{{s.valor_saque}}</th>
+          <th scope="row">{{s.destino_saque}}</th>
+          <td colspan="2">{{s.criado}}</td>
+          {% if s.status_saque == 'waiting' %}
+          <td colspan="2">Aguardando Aprovação</td>
+          {% elif s.status_saque == 'done' %}
+          <td colspan="2">Saque Realizado</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FIM Área de Solicitações de Saque -->
+
+    <!-- ÁREA DE SOLICITAÇÕES DE Deposito -->
+
+    <table class="table">
+      <thead>
+        <th>
+          <a
+            class="btn text-dark"
+            data-toggle="collapse"
+            href="#collapseTable4"
+            role="button"
+            aria-expanded="false"
+            aria-controls="collapseExample2"
+            ><h2>Meus Depositos ▾</h2></a
+          >
+        </th>
+      </thead>
+    </table>
+  
+    <div class="collapse" id="collapseTable4">
       <table class="table">
         <thead>
           <tr>
-            <th scope="col">Moeda</th>
-            <th scope="col">Quantidade</th>
-            <th scope="col">Data da Compra</th>
-          </tr>
-        </thead>
-        <tbody>
-
-          {% for m in moedas_ativas %}
-            
-          <tr>
-            <th scope="row">{{m.moeda}}</th>
-            <th scope="row">{{m.quantidade_moeda}}</th>
-            <td colspan="2">{{m.criado}}</td>
-          </tr>
-
-          {% endfor %}
-          
-        </tbody>
-      </table>
-
-
-      <table class="table"><thead><th><a class="btn text-dark" data-toggle="collapse" href="#collapseTable" role="button" aria-expanded="false" aria-controls="collapseExample"><h2>Minhas Solicitações de Venda ▾</h2></a></th></thead></table>
-
-
-
-      <div class="collapse" id="collapseTable">
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">Moeda</th>
-            <th scope="col">Quantidade</th>
-            <th scope="col">Valor (R$)</th>
-            <th scope="col">Solicitado Em</th>
+            <th scope="col">Valor do Deposito (R$)</th>
             <th scope="col">Status</th>
           </tr>
         </thead>
-        <tbody>       
-          
-          {% for m in solicitacoes_venda %}
-          
-            
-            {% if m.status_venda == 'waiting' %}<tr class="table-warning">{% elif m.status_venda == 'done' %}<tr class="table-success">{% endif %}
-            <th scope="row">{{m.moeda}}</th>
-            <th scope="row">{{m.quantidade_venda}}</th>
-            <th scope="row">{{m.valor_reais_venda}}</th>
-            <td colspan="2">{{m.criado}}</td>
-            {% if m.status_venda == 'waiting' %}<td colspan="2">Venda Solicitada</td>{% elif m.status_venda == 'done' %}<td colspan="2">Vendido</td>{% endif %}            
+        <tbody>
+          {% for d in solicitacoes_deposito %} {% if d.status_deposito == 'waiting' %}
+          <tr class="table-warning">
+            {% elif d.status_deposito == 'done' %}
+          </tr>
+          <tr class="table-success">
+            {% endif %}
+            <th scope="row">{{d.quantidade_reais_deposito}}</th>
+            {% if d.status_deposito == 'waiting' %}
+            <td colspan="2">Aguardando Pagamento</td>
+            {% elif d.status_deposito == 'done' %}
+            <td colspan="2">Deposito Realizado (dinheiro em conta)</td>
+            {% endif %}
           </tr>
           {% endfor %}
-
         </tbody>
       </table>
     </div>
+  
+    <!-- FIM Área de Solicitações de Deposito -->
+
 
 </div>
 
