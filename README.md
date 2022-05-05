@@ -20,10 +20,13 @@ Com a máquina virtual ativada volte até a raiz do projeto e digite o (comando)
 Após instalar todas as dependencias do projeto será necessário criar as tabelas.
 
 Criar Migrations do app de usuarios (comando) -> py manage.py makemigrations usuarios
+
 Criar tabelas de usuarios (comando) -> py manage.py migrate
 
 Criar Migrations do app core (comando) -> py manage.py makemigrations core
+
 Criar tabelas do app core (comando) -> py manage.py migrate
 
 ### Após isso basta rodar o projeto (comando) -> py manage.py runserver 
+
 O Projeto estará rodando no endereço "localhost:8000".
