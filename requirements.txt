@@ -1,0 +1,9 @@
+asgiref==3.5.0
+Django==4.0.4
+django-cpf==0.1.0
+django-stdimage==5.3.0
+mysqlclient==2.1.0
+Pillow==9.1.0
+PyMySQL==1.0.2
+sqlparse==0.4.2
+tzdata==2022.1
